@@ -3,11 +3,11 @@ import React from "react";
 function Header() {
   return (
     <div>
-      <div className="header-container flex justify-between align-center border-b-2 border-[white]">
-        <p className="text-white text-xl font-bold ml-[16rem] my-[3rem]">
+      <div className="header-container flex justify-between items-center border-b-2 border-white p-4">
+        <p className="text-white text-xl font-bold lg:ml-16 my-3 lg:my-0">
           Score:
         </p>
-        <button className="btn text-white bg-yellowGreen hover:bg-yellowDark mr-[16rem] my-[3em] ">
+        <button className="btn text-white bg-yellowGreen hover:bg-yellowDark lg:mr-16 my-3 lg:my-0">
           Login
         </button>
       </div>
