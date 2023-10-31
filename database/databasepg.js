@@ -15,7 +15,7 @@ client.connect();
 const app = express();
 app.use(cors());
 app.get("/getWaldo", (req, res) => {
-  client.query("SELECT * FROM waldo", (err, result) => {
+  client.query("SELECT * FROM waldo ORDER BY id", (err, result) => {
     if (!err) {
       res.send(result.rows);
     } else {
