@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import Timer from "./Timer";
 import { useScore } from "../context/ScoreContext";
+// import { useGoogleAuth } from "../hooks/useGoogleAuth";
 
 const Canvas = (props) => {
   const canvasRef = useRef(null);
@@ -12,7 +13,7 @@ const Canvas = (props) => {
   const [currentLevel, setCurrentLevel] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [waldoFound, setWaldoFound] = useState(false);
-
+  // const { userData } = useGoogleAuth();
   useEffect(() => {
     async function fetchData() {
       try {
@@ -27,7 +28,6 @@ const Canvas = (props) => {
     }
 
     fetchData();
-    console.log(waldoData);
   }, []);
 
   useEffect(() => {
@@ -92,6 +92,10 @@ const Canvas = (props) => {
       canvas.width = img.width;
       canvas.height = img.height;
       context.drawImage(img, 0, 0, canvas.width, canvas.height);
+      if (!gameStarted) {
+        context.fillStyle = "RGBA(20, 20, 20,0.95)";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+      }
     };
 
     canvas.addEventListener("click", handleCanvasClick);
@@ -154,6 +158,25 @@ const Canvas = (props) => {
       setInitialTime(30);
       setGameStarted(false);
       setIsGameOver(!isGameOver);
+      // Send user data to backend
+      // fetch("http://localhost:3000/addToLeaderboard", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     username: userData.displayName, // Replace with the actual username
+      //     profileImage: userData.photoUrl, // Replace with the actual profile image URL
+      //     score: initialTime, // Use the user's score or any appropriate value here
+      //   }),
+      // })
+      //   .then((response) => response.json())
+      //   .then((data) => {
+      //     console.log(data.message);
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error:", error);
+      //   });
     }
     console.log(currentLevel);
   };
@@ -182,7 +205,7 @@ const Canvas = (props) => {
       />
       {!gameStarted && (
         <button
-          className="absolute  m-4 py-2 px-3 rounded font-medium select-none border text-gray-900 bg-white transition-colors hover:border-blue-600 hover:bg-blue-400 hover:text-white"
+          className="absolute  m-4 py-2 px-3 rounded font-medium select-none border text-gray-900 bg-[#B6B9B6] transition-colors hover:border-blue-600 hover:bg-blue-400 hover:text-white"
           onClick={handlePlayButtonClick}
         >
           Play
@@ -190,7 +213,7 @@ const Canvas = (props) => {
       )}
       {isGameOver ? (
         <button
-          className="flex items-center py-2 px-3 rounded font-medium select-none border text-gray-900 bg-white transition-colors hover:border-blue-600 hover:bg-blue-400 hover:text-white"
+          className="flex items-center py-2 px-3 rounded font-medium select-none border text-gray-900 bg-[#B6B9B6] transition-colors hover:border-blue-600 hover:bg-blue-400 hover:text-white"
           onClick={handleNextClick}
         >
           Next ⪼
