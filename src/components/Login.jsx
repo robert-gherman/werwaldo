@@ -1,36 +1,37 @@
+import React from "react";
+import { useScore } from "../context/ScoreContext";
+import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 
 function Login() {
-  const [user, setUser] = useState([]);
-  const [profile, setProfile] = useState([]);
+  const { updateUser } = useScore();
+  const [profile, setProfile] = React.useState(null);
 
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => setUser(codeResponse),
-    onError: (error) => console.log("Login Failed:", error),
-  });
-
-  useEffect(() => {
-    if (user) {
-      axios
-        .get(
-          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+    onSuccess: async (codeResponse) => {
+      try {
+        const response = await axios.get(
+          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${codeResponse.access_token}`,
           {
             headers: {
-              Authorization: `Bearer ${user.access_token}`,
+              Authorization: `Bearer ${codeResponse.access_token}`,
               Accept: "application/json",
             },
           }
-        )
-        .then((res) => {
-          setProfile(res.data);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [user]);
+        );
+        const { name, picture } = response.data;
+        updateUser(name, picture);
+        setProfile({ name, picture });
+      } catch (error) {
+        console.log("Error fetching user info:", error);
+      }
+    },
+    onError: (error) => console.log("Login Failed:", error),
+  });
+
   const logOut = () => {
     googleLogout();
+    updateUser("", "");
     setProfile(null);
   };
 

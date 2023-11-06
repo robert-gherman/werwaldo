@@ -1,19 +1,18 @@
 import { useRef, useState, useEffect } from "react";
 import Timer from "./Timer";
 import { useScore } from "../context/ScoreContext";
-// import { useGoogleAuth } from "../hooks/useGoogleAuth";
 
 const Canvas = (props) => {
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [waldoData, setWaldoData] = useState(null);
   const [initialTime, setInitialTime] = useState(30);
-  const { updateScore } = useScore();
+  const { userName, profileImage, updateScore, score } = useScore();
   const [isGameOver, setIsGameOver] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [waldoFound, setWaldoFound] = useState(false);
-  // const { userData } = useGoogleAuth();
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -60,7 +59,6 @@ const Canvas = (props) => {
           y >= numericY &&
           y <= numericY + height
         ) {
-          console.log("found waldo!");
           const blob = new Blob([new Uint8Array(img.data)]);
           const url = URL.createObjectURL(blob);
           setIsGameOver(true);
@@ -142,7 +140,7 @@ const Canvas = (props) => {
   const handlePlayButtonClick = () => {
     setGameStarted(true);
   };
-  const handleNextClick = () => {
+  const handleNextClick = async () => {
     if (currentLevel < waldoData.length - 1) {
       setInitialTime(30);
       updateScore((prev) => prev + initialTime);
@@ -150,35 +148,32 @@ const Canvas = (props) => {
       setCurrentLevel((prevLevel) => prevLevel + 1);
       setWaldoFound(!waldoFound);
     } else {
-      // All levels completed
       updateScore((prev) => prev + initialTime);
       alert("You completed all levels!");
+      await fetch("http://localhost:3000/addToLeaderboard", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userName: userName,
+          profileImage: profileImage,
+          score: score,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.message);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
       setWaldoFound(!waldoFound);
       setCurrentLevel(0);
       setInitialTime(30);
       setGameStarted(false);
       setIsGameOver(!isGameOver);
-      // Send user data to backend
-      // fetch("http://localhost:3000/addToLeaderboard", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     username: userData.displayName, // Replace with the actual username
-      //     profileImage: userData.photoUrl, // Replace with the actual profile image URL
-      //     score: initialTime, // Use the user's score or any appropriate value here
-      //   }),
-      // })
-      //   .then((response) => response.json())
-      //   .then((data) => {
-      //     console.log(data.message);
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error:", error);
-      //   });
     }
-    console.log(currentLevel);
   };
   const handleTimeOut = () => {
     alert("Game Over");

@@ -4,13 +4,22 @@ const ScoreContext = createContext();
 
 export const ScoreProvider = ({ children }) => {
   const [score, setScore] = useState(0);
+  const [userName, setUserName] = useState("");
+  const [profileImage, setProfileImage] = useState("");
 
   const updateScore = (newScore) => {
     setScore(newScore);
   };
 
+  const updateUser = (name, image) => {
+    setUserName(name);
+    setProfileImage(image);
+  };
+
   return (
-    <ScoreContext.Provider value={{ score, updateScore }}>
+    <ScoreContext.Provider
+      value={{ score, updateScore, userName, profileImage, updateUser }}
+    >
       {children}
     </ScoreContext.Provider>
   );

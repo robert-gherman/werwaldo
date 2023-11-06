@@ -31,7 +31,9 @@ const Leaderboard = (props) => {
       return "gray";
     }
   };
-
+  const generateAvatarUrl = (text) => {
+    return `https://robohash.org/${text}?size=50x50`;
+  };
   return (
     <>
       <Card className={props.className}>
@@ -71,15 +73,34 @@ const Leaderboard = (props) => {
                       )}
                     </Badge>
                   </TableCell>
-                  <TableCell>
-                    <Text color={props.theme || "purple"}>
-                      {item[props.id]}
-                    </Text>
-                  </TableCell>
+
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    {item[props.id] ? (
+                      <img
+                        src={generateAvatarUrl(item[props.id])}
+                        alt="avatar"
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={generateAvatarUrl("anonymous")}
+                        alt="avatar"
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    )}
+                  </div>
                   {props.cell1 && (
                     <TableCell>
                       <Text color={props.theme || "purple"}>
-                        {item[props.cell1]}
+                        {item[props.id] ? item[props.cell1] : "anonymous"}
                       </Text>
                     </TableCell>
                   )}
