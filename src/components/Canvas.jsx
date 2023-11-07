@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import Timer from "./Timer";
 import { useScore } from "../context/ScoreContext";
-
+const url = import.meta.env.VITE_REACT_URL;
 const Canvas = (props) => {
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(true);
@@ -16,7 +16,7 @@ const Canvas = (props) => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch("http://localhost:3000/getWaldo");
+        const response = await fetch(`${url}/getWaldo`);
         const data = await response.json();
         setWaldoData(data);
       } catch (error) {
@@ -41,7 +41,7 @@ const Canvas = (props) => {
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-
+      console.log(x, y);
       if (waldoData) {
         const {
           x: waldoX,
@@ -102,7 +102,36 @@ const Canvas = (props) => {
       canvas.removeEventListener("click", handleCanvasClick);
     };
   }, [gameStarted, waldoData, currentLevel]);
+  useEffect(() => {
+    const sendScoreToAPI = async () => {
+      try {
+        await fetch(`${url}/addToLeaderboard`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userName: userName,
+            profileImage: profileImage,
+            score: score,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data.message);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } catch (error) {
+        console.error("Error sending score to API:", error);
+      }
+    };
 
+    if (score !== null) {
+      sendScoreToAPI();
+    }
+  }, [score]);
   const handleFullScreenButtonClick = () => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -140,6 +169,7 @@ const Canvas = (props) => {
   const handlePlayButtonClick = () => {
     setGameStarted(true);
   };
+
   const handleNextClick = async () => {
     if (currentLevel < waldoData.length - 1) {
       setInitialTime(30);
@@ -149,25 +179,9 @@ const Canvas = (props) => {
       setWaldoFound(!waldoFound);
     } else {
       updateScore((prev) => prev + initialTime);
+
       alert("You completed all levels!");
-      await fetch("http://localhost:3000/addToLeaderboard", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userName: userName,
-          profileImage: profileImage,
-          score: score,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data.message);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+
       setWaldoFound(!waldoFound);
       setCurrentLevel(0);
       setInitialTime(30);
@@ -181,6 +195,7 @@ const Canvas = (props) => {
     setInitialTime(30);
     setGameStarted(false);
   };
+
   return (
     <div className="relative flex flex-col items-center">
       {gameStarted && (

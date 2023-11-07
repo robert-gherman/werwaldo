@@ -2,17 +2,16 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Section from "../components/Section";
 import Leaderboard from "../components/Leaderboard";
-
+const url = import.meta.env.VITE_REACT_URL;
 function Home() {
   const [leaderboardData, setLeaderboardData] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/getLeaderboard")
+    fetch(`${url}/getLeaderboard`)
       .then((response) => response.json())
       .then((data) => setLeaderboardData(data))
       .catch((error) => console.error("Error:", error));
   }, []);
-  console.log(leaderboardData);
 
   return (
     <div className="h-screen">

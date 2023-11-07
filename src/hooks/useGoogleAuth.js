@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import jwtDecode from "jwt-decode";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 export const useGoogleAuth = () => {
   const [user, setUser] = useState([]);
