@@ -15,4 +15,4 @@ How to Play
     Each successful find adds points to your score and advances you to the next level.
     Don't forget to check the timer! Running out of time ends the game.
 
-![Uploading wer.PNG…]()
+![wer](https://github.com/robert-gherman/werwaldo/assets/62173950/4fd3f0a3-f60c-40ff-9547-9f0c7fe2d8e4)
