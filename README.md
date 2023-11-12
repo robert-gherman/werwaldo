@@ -1,8 +1,18 @@
-# React + Vite
+Where's Waldo Game
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the Where's Waldo game! Test your observation skills and find Waldo hidden in the pictures. The game features a timer, a scoreboard, and login authentication with Google.
+Features
 
-Currently, two official plugins are available:
+    Timer: A countdown timer challenges you to find Waldo within a given time limit.
+    Scoreboard: Compete with others and track your score on the leaderboard.
+    Google Authentication: Log in with your Google account to personalize your gaming experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+How to Play
+
+    Click the "Play" button to start the game.
+    Locate Waldo in the image by clicking on the correct spot.
+    The game includes multiple levels with increasing difficulty.
+    Each successful find adds points to your score and advances you to the next level.
+    Don't forget to check the timer! Running out of time ends the game.
+
+![Uploading wer.PNG…]()
